@@ -23,7 +23,7 @@ export default function Cart() {
   const [isOpen, setIsOpen] = useState(false);
   const classes = useStyles();
   const cartCtx = useCartContext();
-  console.log(cartCtx)
+  
   const toggleIsOpen = () => {
     setIsOpen(prevOpen => !prevOpen)
   }
@@ -38,7 +38,12 @@ export default function Cart() {
         variant="contained"
         >
           Your Cart
-        <Chip size="small" className={`${classes.chip} ${classes.label}`} label={cartCtx.state.numItems} color="secondary"/>
+          <Chip
+            className={`${classes.chip} ${classes.label}`}
+            size="small" 
+            label={cartCtx.state.numItems} 
+            color="secondary"
+          />
       </Button>
       <CartPopUp isOpen={isOpen} toggleIsOpen={toggleIsOpen}/>
     </React.Fragment>

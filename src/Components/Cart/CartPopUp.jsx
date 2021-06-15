@@ -1,5 +1,6 @@
 import { Box, Dialog, DialogContent, makeStyles, Typography, Button } from '@material-ui/core'
 import React from 'react'
+import { useCartContext } from '../../store/cart-context';
 import CartItem from "./CartItem"
 
 const useStyles = makeStyles((theme) => ({
@@ -11,6 +12,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CartPopUp({isOpen, toggleIsOpen}) {
   const classes = useStyles();
+  const cartCtx = useCartContext();
+  const { total, cartItems } = cartCtx.state;
+
+
   return (
     <Dialog
       open={isOpen}
@@ -21,13 +26,13 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
       maxWidth="xs"
     >
       <DialogContent className={classes.dialogContent}>
-        <CartItem />
+        {cartItems.map(item => <CartItem key={item.id} item={item} />)}
         <Box display="flex" justifyContent="space-between" mb={3}>
           <Typography style={{fontWeight: 800}} variant="h5">
               Total:
           </Typography>
           <Typography style={{fontWeight: 800}} variant="h5">
-              $88.63
+              ${total.toFixed(2)}
           </Typography>
         </Box>
         <Box display="flex" justifyContent="flex-end">
@@ -35,7 +40,11 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
             onClick={toggleIsOpen}
             variant="outlined"
           >Close</Button>
-          <Button variant="outlined" color="primary">
+          <Button
+            disabled={cartItems.length === 0? true : false}
+            variant="outlined" 
+            color="primary"
+          >
             Order
           </Button>
         </Box>
