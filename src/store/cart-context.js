@@ -7,7 +7,7 @@ const CartContext = React.createContext({
     total: 0,
     numItems: 0,
   },
-  addTocart: () => {console.log("hello")},
+  dispatch: () => {},
 })
 
 const calculateTotal = (cartItems) => {
@@ -30,13 +30,13 @@ const cartReducer = (state, action) => {
         let newItem = {...item, amount: amount}
         cartItemsCopy = [...cartItemsCopy, newItem];
       }
+
       return {
         total: calculateTotal(cartItemsCopy),
         cartItems: cartItemsCopy,
         numItems: state.numItems + amount,
       };
     }
-
     case "DECREMENT_ITEM": {
       const { id } = action;
       let itemsCopy = [...state.cartItems]
@@ -48,16 +48,14 @@ const cartReducer = (state, action) => {
         itemsCopy.splice(index, 1)
         : 
         itemsCopy[index] = item;
-    
-      
+        
       return {
         total: calculateTotal(itemsCopy),
         cartItems: itemsCopy,
         numItems: state.numItems - 1,
       };
     }
-
-    case "INCREMENT_ITEM":{
+    case "INCREMENT_ITEM": {
       const { id } = action;
 
       let itemsCopy = [...state.cartItems]
@@ -72,7 +70,6 @@ const cartReducer = (state, action) => {
         numItems: state.numItems + 1,
       };
     }
-
     default:
       throw new Error(`Undhandled action type : ${action.type}`)
   }
@@ -104,12 +101,7 @@ function useCartContext() {
 
 export { useCartContext }
 
-
+// A few references used for setting up cart-context
 // https://dougschallmoser.medium.com/context-api-usereducer-in-react-2691c137f5f
-
 // https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
-
-// Give the context with reducer another look over and try to get it working
-// If you can't comment it out and just do context with normal state
-// Can still do the same structure this way anyways

@@ -21,10 +21,9 @@ const useStyles = makeStyles((theme) => ({
 export default function CartItem({item}) {
   const {name, price, amount, id} = item;
   const { dispatch } = useCartContext()
-
   const classes = useStyles()
   return (
-    <div>
+    <React.Fragment>
       <div className={classes.layout}>
         <div>
           <Typography style={{fontWeight: 800}} variant="h5">
@@ -41,6 +40,6 @@ export default function CartItem({item}) {
         </div>
       </div>
       <hr />
-    </div>
+    </React.Fragment>
   )
 }

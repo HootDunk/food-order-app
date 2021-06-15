@@ -64,7 +64,7 @@ export default function MealItem({ item }) {
               value={amount === 0 ? "" : amount}
               label="amount"
               type="number"
-              InputProps={{ inputProps: { min: 1, max: 5 } }}
+              InputProps={{ inputProps: { min: 1, max: 5} }}
             />
             <Button 
               type="submit"

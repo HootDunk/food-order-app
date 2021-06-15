@@ -1,8 +1,5 @@
 
-// consider making menuData a context thing?
-  // could use the json server to load in
-  // the menu data and create a menuContext
-  // to pass it through the app
+
 const menuData = [
   {
     id: 1,
@@ -32,13 +29,3 @@ const menuData = [
 
 
 export { menuData }
-
-// I think use Json Server to create a menu-context
-
-// Then use the useReducer pattern to create the cart information
-
-// cart info is needed for both the cart modal and the menu card -> definitely
-  // make it into a context.  Consider reducer pattern.
-
-
-// could place order data and menu data in one context.

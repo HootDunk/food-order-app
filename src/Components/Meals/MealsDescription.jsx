@@ -39,7 +39,6 @@ export default function MealsDescription() {
           All our meals are cooked with high-quality ingredients, just-in-time and of course by experienced chefs!
         </Typography>
       </Card>
-
     </Box>
   )
 }

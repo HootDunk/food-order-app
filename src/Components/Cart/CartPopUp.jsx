@@ -48,9 +48,7 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
             Order
           </Button>
         </Box>
-
       </DialogContent>
-
     </Dialog>
   )
 }
