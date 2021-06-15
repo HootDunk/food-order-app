@@ -3,18 +3,30 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 
+import Cart from "../Cart/Cart"
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      marginBottom: theme.spacing(10)
+    },
   },
   toolbar: {
-    paddingLeft: theme.spacing(8),
-    paddingRight: theme.spacing(8),
+    padding: theme.spacing(1),
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
+    display: "flex",
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    textAlign: 'center',
+    [theme.breakpoints.up('sm')]: {
+      paddingLeft: theme.spacing(14),
+      paddingRight: theme.spacing(14),
+      textAlign: 'left',
+    },
   },
   title: {
     flexGrow: 1,
@@ -32,9 +44,7 @@ export default function ButtonAppBar() {
           <Typography variant="h4" className={classes.title}>
             ReactMeals
           </Typography>
-          <Button color="inherit">
-            Login
-          </Button>
+          <Cart />
         </Toolbar>
       </AppBar>
     </div>
