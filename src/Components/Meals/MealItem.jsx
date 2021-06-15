@@ -27,15 +27,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MealItem({ item }) {
   const classes = useStyles();
-  // const cartCtx = useContext(CartContext);
-  const cartCtx = useCartContext();
   const [amount, setAmount] = useState(0);
+  const cartCtx = useCartContext();
+  
 
   const handleSubmit = (e) => {
-    console.log(e.target)
     e.preventDefault();
-    console.log("submitting...")
-    cartCtx.dispatch({type: "ADD_ITEM_TO_CART", item: item})
+    cartCtx.dispatch({type: "ADD_ITEM_TO_CART", item: item, amount: amount})
     setAmount(0)
   }
 
@@ -62,7 +60,7 @@ export default function MealItem({ item }) {
             className={classes.right}>
             <TextField
               required
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => setAmount(+e.target.value)}
               value={amount === 0 ? "" : amount}
               label="amount"
               type="number"

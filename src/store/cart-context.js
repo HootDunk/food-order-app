@@ -10,12 +10,69 @@ const CartContext = React.createContext({
   addTocart: () => {console.log("hello")},
 })
 
+const calculateTotal = (cartItems) => {
+  return cartItems.reduce((acc, item) => acc + (item.amount * item.price), 0)
+}
+
 const cartReducer = (state, action) => {
   switch(action.type) {
-    case 'ADD_ITEM_TO_CART':
-      console.log(state)
-      console.log("add item to cart => ", action.item)
-      return state;
+    case 'ADD_ITEM_TO_CART': {
+      let cartItemsCopy = [...state.cartItems]
+      const {item, amount} = action;
+      const index = cartItemsCopy
+        .findIndex(stateItem => stateItem.id === item.id);
+      if (index !== -1){
+        let copy = {...cartItemsCopy[index]}
+        copy = {...copy, amount: copy.amount += amount }
+        cartItemsCopy[index] = copy;
+      }
+      else {
+        let newItem = {...item, amount: amount}
+        cartItemsCopy = [...cartItemsCopy, newItem];
+      }
+      return {
+        total: calculateTotal(cartItemsCopy),
+        cartItems: cartItemsCopy,
+        numItems: state.numItems + amount,
+      };
+    }
+
+    case "DECREMENT_ITEM": {
+      const { id } = action;
+      let itemsCopy = [...state.cartItems]
+      const index = itemsCopy.findIndex(item => item.id === id);
+      const item = {...itemsCopy[index]}
+      item.amount -= 1;
+      if (item.amount === 0) ;
+      item.amount === 0? 
+        itemsCopy.splice(index, 1)
+        : 
+        itemsCopy[index] = item;
+    
+      
+      return {
+        total: calculateTotal(itemsCopy),
+        cartItems: itemsCopy,
+        numItems: state.numItems - 1,
+      };
+    }
+
+    case "INCREMENT_ITEM":{
+      const { id } = action;
+
+      let itemsCopy = [...state.cartItems]
+      const index = itemsCopy.findIndex(item => item.id === id);
+      const item = {...itemsCopy[index]}
+      item.amount += 1;
+      itemsCopy[index] = item;
+    
+      return {
+        total: calculateTotal(itemsCopy),
+        cartItems: itemsCopy,
+        numItems: state.numItems + 1,
+      };
+    }
+
     default:
       throw new Error(`Undhandled action type : ${action.type}`)
   }
