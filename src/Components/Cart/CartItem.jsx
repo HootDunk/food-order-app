@@ -1,5 +1,6 @@
 import { Button, Chip, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
+import { useCartContext } from '../../store/cart-context';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -15,27 +16,28 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.2rem",
     padding: "0",
   },
-
 }))
 
-export default function CartItem() {
+export default function CartItem({item}) {
+  const {name, price, amount, id} = item;
+  const { dispatch } = useCartContext()
+
   const classes = useStyles()
   return (
     <div>
       <div className={classes.layout}>
         <div>
           <Typography style={{fontWeight: 800}} variant="h5">
-            Sushi
+            {name}
           </Typography>
-
           <Typography  color="secondary" variant="h6">
-            $22.99
-            <Chip label="x2" size="small" className={classes.chip}/>
+            ${price.toFixed(2)}
+            <Chip label={`x${amount}`} size="small" className={classes.chip}/>
           </Typography>
         </div>
         <div>
-          <Button className={classes.plusAndMinus} variant="outlined">-</Button>
-          <Button className={classes.plusAndMinus} variant="outlined">+</Button>
+          <Button onClick={() => dispatch({type: "DECREMENT_ITEM", id})} className={classes.plusAndMinus} variant="outlined">-</Button>
+          <Button onClick={() => dispatch({type: "INCREMENT_ITEM", id})} className={classes.plusAndMinus} variant="outlined">+</Button>
         </div>
       </div>
       <hr />
