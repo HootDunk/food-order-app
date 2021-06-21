@@ -22,3 +22,5 @@ export default function MealList() {
     </Card>
   )
 }
+
+// fetch meals data.  Use http hooks
