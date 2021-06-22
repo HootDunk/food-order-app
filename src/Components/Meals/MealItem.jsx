@@ -29,14 +29,12 @@ export default function MealItem({ item }) {
   const classes = useStyles();
   const [amount, setAmount] = useState(0);
   const cartCtx = useCartContext();
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     cartCtx.dispatch({type: "ADD_ITEM_TO_CART", item: item, amount: amount})
     setAmount(0)
   }
-
   
   return (
     <div className={classes.wrapper}>

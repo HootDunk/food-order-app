@@ -11,15 +11,14 @@ const checkForNumber = (value) => {
   return !isNaN(value) && value.trim() !== "";
 }
 
-export default function CheckoutForm({closeModal, orderIsValid}) {
-  console.log(closeModal)
+export default function CheckoutForm({closeModal, orderIsValid, handleSubmit}) {
+
   const {
     inputValue: nameValue, 
     valueIsValid: nameIsValid,
     hasError: nameHasError,
     blurHandler: nameBlurHandler,
     changeHandler: nameChangeHandler,
-    reset: resetName,
   } = useInput(checkForInput)
 
   const {
@@ -28,7 +27,6 @@ export default function CheckoutForm({closeModal, orderIsValid}) {
     hasError: streetHasError,
     blurHandler: streetBlurHandler,
     changeHandler: streetChangeHandler,
-    reset: resetStreet,
   } = useInput(checkForInput)
 
   const {
@@ -37,7 +35,6 @@ export default function CheckoutForm({closeModal, orderIsValid}) {
     hasError: cityHasError,
     blurHandler: cityBlurHandler,
     changeHandler: cityChangeHandler,
-    reset: resetCity,
   } = useInput(checkForInput)
 
   const {
@@ -46,7 +43,6 @@ export default function CheckoutForm({closeModal, orderIsValid}) {
     hasError: zipHasError,
     blurHandler: zipBlurHandler,
     changeHandler: zipChangeHandler,
-    reset: resetZip,
   } = useInput(checkForNumber)
 
   const formIsValid = nameIsValid && streetIsValid && cityIsValid && zipIsValid;
@@ -112,7 +108,12 @@ export default function CheckoutForm({closeModal, orderIsValid}) {
           }}
           right={{
             text: "Complete Order",
-            function: () => console.log("send to database"),
+            function: () => handleSubmit({
+                name: nameValue,
+                street: streetValue,
+                city: cityValue,
+                zipcode: zipValue,
+              }),
             isDisabled: !formIsValid || !orderIsValid,
           }}
         />

@@ -1,10 +1,12 @@
-import { Box, Dialog, DialogContent, makeStyles, Typography, Button } from '@material-ui/core'
+import { Box, Button, Dialog, DialogContent, makeStyles, Typography, LinearProgress } from '@material-ui/core'
 import React from 'react'
 import { useCartContext } from '../../store/cart-context';
 import CartItem from "./CartItem"
 import CheckoutForm from "./CheckoutForm"
 import CheckoutButtons from "./CheckoutButtons"
 import { useState } from 'react';
+import useHttps from "../../hooks/use-https"
+
 const useStyles = makeStyles((theme) => ({
   dialogContent: {
     paddingLeft: theme.spacing(2),
@@ -20,27 +22,49 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
   const classes = useStyles();
   const cartCtx = useCartContext();
   const { total, cartItems } = cartCtx.state;
-  const [formIsOpen, setFormIsOpen] = useState(false);
 
-  const toggleForm = () => {
-    setFormIsOpen(prevOpen => !prevOpen);
+  const [isCheckout, setIsCheckout] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
+  const {isLoading, error, sendRequest: submitMenuItems} = useHttps()
+
+  const toggleIsCheckout = () => {
+    setIsCheckout(prevOpen => !prevOpen);
+  }
+
+  // send in the order and reset the state if the data is valid
+  const handleSubmit = (userData) => {
+    !didSubmit && setDidSubmit(true);
+    submitMenuItems(
+      {
+        url: 'https://react-http-9c0b8-default-rtdb.firebaseio.com/orders.json',
+        method: 'POST',
+        body: {
+          orderedItems: cartCtx.state.cartItems,
+          user: userData
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      },
+      async (data) => {
+        cartCtx.dispatch({type: "RESET"})
+        setIsCheckout(false)
+        // await new Promise((r) => setTimeout(r, 3000));
+        // setDidSubmit(false)
+        // clear out cart, set isCheckout to false, set didSubmit to false
+        // if successfully sent will need to set didSubmit back to false when the modal closes
+      } 
+    )
   }
 
   const orderIsValid = cartItems.length > 0? true : false;
 
-  return (
-    <Dialog
-      className={classes.modal}
-      open={isOpen}
-      onClose={toggleIsOpen}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      fullWidth
-      maxWidth="xs"
-    >
-      <DialogContent className={classes.dialogContent}>
-        {cartItems.map(item => <CartItem key={item.id} item={item} />)}
+  let content;
 
+  if (!didSubmit){
+    content = (
+      <React.Fragment>
+        {cartItems.map(item => <CartItem key={item.id} item={item} />)}
         <Box display="flex" justifyContent="space-between" mb={3}>
           <Typography style={{fontWeight: 800}} variant="h5">
               Total:
@@ -49,7 +73,7 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
               ${total.toFixed(2)}
           </Typography>
         </Box>
-        {!formIsOpen && 
+        {!isCheckout && 
           <CheckoutButtons 
             left={{
               text: "Close",
@@ -57,16 +81,79 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
             }}
             right={{
               text: "Checkout",
-              function: toggleForm,
+              function: toggleIsCheckout,
               isDisabled: !orderIsValid,
             }}
           />
         }
-        {formIsOpen && 
+        {isCheckout && 
           <CheckoutForm 
             closeModal={toggleIsOpen} 
-            orderIsValid={orderIsValid}/>
+            orderIsValid={orderIsValid}
+            handleSubmit={handleSubmit}
+          />
         }
+      </React.Fragment>
+      )
+  }
+  else if (didSubmit){
+    if (isLoading){
+      content = (
+        <Box textAlign="center" p={2}>
+          <Box mb={2}>
+            <Typography variant="h4">Sending Your Order...</Typography>
+          </Box>
+          <LinearProgress />
+        </Box>
+      )
+    }
+    else if (error){
+      content = (
+        <Box textAlign="center" p={1}>
+          <Typography variant="h4">Something Went Wrong...</Typography>
+          <Typography variant="body1">{error}</Typography>
+          <Box m={2}>
+            <Button 
+              onClick={handleSubmit}
+              variant="contained" 
+              color="primary"
+            >
+              Click Here to Resend
+            </Button>
+          </Box>
+        </Box>
+      )
+    }
+    else {
+      content = (
+        <Box textAlign="center" p={2}>
+          <Box mb={2}>
+            <Typography variant="h4">Order Successfully Sent</Typography>
+          </Box>
+        </Box>
+      )
+    }
+  }
+
+
+  return (
+    <Dialog
+      className={classes.modal}
+      open={isOpen}
+      onClose={didSubmit?
+        () => 
+          {
+            toggleIsOpen()
+            setDidSubmit(false);
+          } 
+        : toggleIsOpen}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      fullWidth
+      maxWidth="xs"
+    >
+      <DialogContent className={classes.dialogContent}>
+        {content}
       </DialogContent>
     </Dialog>
   )

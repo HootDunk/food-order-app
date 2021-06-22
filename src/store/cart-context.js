@@ -70,6 +70,13 @@ const cartReducer = (state, action) => {
         numItems: state.numItems + 1,
       };
     }
+    case "RESET": {
+      return {
+        total: 0,
+        cartItems: [],
+        numItems: 0,
+      }
+    }
     default:
       throw new Error(`Undhandled action type : ${action.type}`)
   }

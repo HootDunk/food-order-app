@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 export default function MealList() {
   const classes = useStyles();
   const [menuItems, setMenuItems] = useState([]);
-  // const {isLoading, error, sendRequest: getMenuItems} = useHttp();
   const {isLoading, error, sendRequest: getMenuItems} = useHttps()
 
   const transformMenuItems = (data) => {
