@@ -44,6 +44,7 @@ export default function MealList() {
     content = (
       <Box textAlign="center" p={1}>
         <Typography variant="h4">Something Went Wrong...</Typography>
+        <Typography variant="body1">{error}</Typography>
         <Box m={2}>
           <Button 
             onClick={() => getMenuItems(
