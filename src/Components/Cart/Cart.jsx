@@ -43,7 +43,6 @@ export default function Cart() {
   
   const { numItems } = cartCtx.state;
   
-  
   useEffect(() => {
     if (numItems === 0) return;
     setBtnIsAnimated(true);

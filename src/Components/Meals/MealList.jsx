@@ -15,8 +15,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-
-
 export default function MealList() {
   const classes = useStyles();
   const [menuItems, setMenuItems] = useState([]);

@@ -46,13 +46,9 @@ export default function CartPopUp({isOpen, toggleIsOpen}) {
           'Content-Type': 'application/json',
         }
       },
-      async (data) => {
+      (data) => {
         cartCtx.dispatch({type: "RESET"})
         setIsCheckout(false)
-        // await new Promise((r) => setTimeout(r, 3000));
-        // setDidSubmit(false)
-        // clear out cart, set isCheckout to false, set didSubmit to false
-        // if successfully sent will need to set didSubmit back to false when the modal closes
       } 
     )
   }

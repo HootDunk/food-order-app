@@ -19,11 +19,9 @@ const useStyles = makeStyles((theme) => ({
   body: {
     color: fade(theme.palette.primary.contrastText, 0.7)
   }
-
 }))
 
 export default function MealsDescription() {
-
   const classes = useStyles();
 
   return (
