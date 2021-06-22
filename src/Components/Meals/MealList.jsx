@@ -1,7 +1,8 @@
-import { Card, makeStyles } from '@material-ui/core';
-import React from 'react'
+import { Card, makeStyles, LinearProgress, Box, Button } from '@material-ui/core';
+import React, {useState, useEffect} from 'react'
 import MealItem from './MealItem'
-import { menuData } from '../../MenuData';
+import useHttps from '../../hooks/use-https';
+import { Typography } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   card: {
     marginTop: theme.spacing(3),
@@ -14,13 +15,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+
+
 export default function MealList() {
   const classes = useStyles();
+  const [menuItems, setMenuItems] = useState([]);
+  // const {isLoading, error, sendRequest: getMenuItems} = useHttp();
+  const {isLoading, error, sendRequest: getMenuItems} = useHttps()
+
+  const transformMenuItems = (data) => {
+    const loadedMenuItems = [];
+  
+    for (const menuKey in data){
+      loadedMenuItems.push({ id: menuKey, ...data[menuKey] })
+    }
+    setMenuItems(loadedMenuItems)
+  };
+  
+  useEffect(() => {
+    getMenuItems(
+      {url: "https://react-http-9c0b8-default-rtdb.firebaseio.com/meals.json"},
+      transformMenuItems
+    )
+  }, [getMenuItems])
+
+  let content;
+  if (error){
+    content = (
+      <Box textAlign="center" p={1}>
+        <Typography variant="h4">Something Went Wrong...</Typography>
+        <Box m={2}>
+          <Button 
+            onClick={() => getMenuItems(
+              {url: "https://react-http-9c0b8-default-rtdb.firebaseio.com/meals.json"},
+              transformMenuItems)
+            }
+            variant="contained" 
+            color="primary"
+          >
+            Click Here to Reload
+          </Button>
+        </Box>
+      </Box>
+    )
+  }
+  else if (isLoading){
+    content = (
+      <Box textAlign="center" p={2}>
+        <Box mb={2}>
+          <Typography variant="h4">Menu is Loading...</Typography>
+        </Box>
+        <LinearProgress />
+      </Box>
+    )  
+  }
+  else if (menuItems.length){
+    content = menuItems.map(item => <MealItem key={item.id} item={item}/>);
+  }
+  
+  
   return (
     <Card className={classes.card} raised>
-      {menuData.map(item => <MealItem key={item.id} item={item}/>)}
+      {content}
     </Card>
   )
 }
-
-// fetch meals data.  Use http hooks
