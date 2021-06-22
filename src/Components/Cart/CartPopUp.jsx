@@ -13,8 +13,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(2),
   },
   modal: {
-    maxHeight: "550px",
-    overflow:'scroll',
+    maxHeight: "550px", 
   }
 }))
 
