@@ -1,4 +1,4 @@
-# food-order-app
+# food-order-app - [LIVE}(https://hootdunk.github.io/food-order-app/)
 
 This project covers the second and third assignments from the Udemy course "React - The Complete Guide".    Before following along and watching the instructor build out the project, I wanted to try creating the app on my own.  This repo is the result of that, and I'm happy with how it turned out.
 
